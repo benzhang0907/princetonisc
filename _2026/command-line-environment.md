@@ -1,7 +1,7 @@
 ---
 layout: lecture
 title: "Command-line Environment"
-description: \>
+description: >
   Learn how command-line programs work, including input/output streams, environment variables, and remote machines with SSH.
 thumbnail: /static/assets/thumbnails/2026/lec2.png
 date: 2026-01-13
@@ -10,7 +10,6 @@ video:
   aspect: 56.25
   id: ccBGsPedE9Q
 ---
-$$\mathbf{\nabla}c(\mathbf{r},t)$$
 
 As we covered in the previous lecture, most shells are not a mere launcher to start up other programs,
 but in practice they provide an entire programming language full of common patterns and abstractions.
@@ -205,7 +204,7 @@ grep "pattern" < input.txt
 cmd > /dev/null 2>&1
 ```
 
-Another powerful tool that exemplifies the Unix philosophy is [`fzf`][1], a fuzzy finder. It reads lines from stdin and provides an interactive interface to filter and select:
+Another powerful tool that exemplifies the Unix philosophy is [`fzf`](https://github.com/junegunn/fzf), a fuzzy finder. It reads lines from stdin and provides an interactive interface to filter and select:
 
 ```console
 $ ls | fzf
@@ -252,7 +251,7 @@ Whenever a shell program calls another program it passes along a set of variable
 From within a shell we can find the current environment variables by running `printenv`.
 To pass an environment variable explicitly we can prepend a command with a variable assignment
 
-> Environment variables are conventionally written in ALL\_CAPS (e.g., `HOME`, `PATH`, `DEBUG`). This is a convention, not a technical requirement, but following it helps distinguish environment variables from local shell variables which are typically lowercase.
+> Environment variables are conventionally written in ALL_CAPS (e.g., `HOME`, `PATH`, `DEBUG`). This is a convention, not a technical requirement, but following it helps distinguish environment variables from local shell variables which are typically lowercase.
 
 ```shell
 TZ=Asia/Tokyo date  # prints the current time in Tokyo
@@ -283,7 +282,7 @@ We can access the return code of the last command that was run by accessing the 
 
 The shell has boolean operators `&&` and `||` for performing AND and OR operations respectively.
 Unlike those encountered in regular programming languages, the ones in the shell operate on the return code of programs.
-Both of these are [short-circuiting][2] operators.
+Both of these are [short-circuiting](https://en.wikipedia.org/wiki/Short-circuit_evaluation) operators.
 This means that they can be used to conditionally run commands based on the success or failure of previous commands, where success is determined based on whether the return code is zero or not. Some examples:
 
 ```shell
@@ -369,21 +368,21 @@ I got a SIGINT, but I am not stopping
 ```
 
 While `SIGINT` and `SIGQUIT` are both usually associated with terminal related requests, a more generic signal for asking a process to exit gracefully is the `SIGTERM` signal.
-To send this signal we can use the [`kill`][3] command, with the syntax `kill -TERM <PID>`.
+To send this signal we can use the [`kill`](https://www.man7.org/linux/man-pages/man1/kill.1.html) command, with the syntax `kill -TERM <PID>`.
 
 Signals can do other things beyond killing a process. For instance, `SIGSTOP` pauses a process. In the terminal, typing `Ctrl-Z` will prompt the shell to send a `SIGTSTP` signal, short for Terminal Stop (i.e. the terminal's version of `SIGSTOP`).
 
-We can then continue the paused job in the foreground or in the background using [`fg`][4] or [`bg`][5], respectively.
+We can then continue the paused job in the foreground or in the background using [`fg`](https://www.man7.org/linux/man-pages/man1/fg.1p.html) or [`bg`](https://man7.org/linux/man-pages/man1/bg.1p.html), respectively.
 
-The [`jobs`][6] command lists the unfinished jobs associated with the current terminal session.
-You can refer to those jobs using their pid (you can use [`pgrep`][7] to find that out).
+The [`jobs`](https://www.man7.org/linux/man-pages/man1/jobs.1p.html) command lists the unfinished jobs associated with the current terminal session.
+You can refer to those jobs using their pid (you can use [`pgrep`](https://www.man7.org/linux/man-pages/man1/pgrep.1.html) to find that out).
 More intuitively, you can also refer to a process using the percent symbol followed by its job number (displayed by `jobs`). To refer to the last backgrounded job you can use the `$!` special parameter.
 
 One more thing to know is that the `&` suffix in a command will run the command in the background, giving you the prompt back, although it will still use the shell's STDOUT which can be annoying (use shell redirections in that case). Equivalently, to background an already running program you can do `Ctrl-Z` followed by `bg`.
 
 
 Note that backgrounded processes are still children processes of your terminal and will die if you close the terminal (this will send yet another signal, `SIGHUP`).
-To prevent that from happening you can run the program with [`nohup`][8] (a wrapper to ignore `SIGHUP`), or use `disown` if the process has already been started.
+To prevent that from happening you can run the program with [`nohup`](https://www.man7.org/linux/man-pages/man1/nohup.1.html) (a wrapper to ignore `SIGHUP`), or use `disown` if the process has already been started.
 Alternatively, you can use a terminal multiplexer as we will see in the next section.
 
 Below is a sample session to showcase some of these concepts.
@@ -415,7 +414,7 @@ $ kill %2
 
 A special signal is `SIGKILL` since it cannot be captured by the process and it will always terminate it immediately. However, it can have bad side effects such as leaving orphaned children processes.
 
-You can learn more about these and other signals [here][9] or typing [`man signal`][10] or `kill -l`.
+You can learn more about these and other signals [here](https://en.wikipedia.org/wiki/Signal_(IPC)) or typing [`man signal`](https://www.man7.org/linux/man-pages/man7/signal.7.html) or `kill -l`.
 
 Within shell scripts, you can use the `trap` built-in to execute commands when signals are received. This is useful for cleanup operations:
 
@@ -477,7 +476,7 @@ If you, like me, prefer to learn by example, this is a good usecase of the `tldr
 
 Run `tldr chmod` to see more examples, including recursive operations and group permissions.
 
-> Your shell might show you something like `command not found: tldr`. That is because it is a more modern tool and it is not pre-installed in most systems. A good reference for how to install tools is the [https://command-not-found.com][11] website. It contains instructions for a huge collection of CLI tools for popular OS distributions.
+> Your shell might show you something like `command not found: tldr`. That is because it is a more modern tool and it is not pre-installed in most systems. A good reference for how to install tools is the [https://command-not-found.com](https://command-not-found.com) website. It contains instructions for a huge collection of CLI tools for popular OS distributions.
 
 Each program is run as a specific user in the system. We can use the `whoami` command to find our user name and `id -u` to find our UID (user id) which is the integer value that the OS associates with the user.
 
@@ -485,7 +484,7 @@ When running `sudo command`, the `command` is run as the root user which can byp
 Try running `sudo whoami` and `sudo id -u` to see how the output changes (you might be prompted for your password).
 To change the owner of a file or folder, we use the `chown` command.
 
-You can learn more about UNIX file permissions [here][12]
+You can learn more about UNIX file permissions [here](https://en.wikipedia.org/wiki/File-system_permissions#Traditional_Unix_permissions)
 
 So far we've focused on your local machine, but many of these skills become even more valuable when working with remote servers.
 
@@ -512,7 +511,7 @@ ssh alice@server 'ls | wc -l'
 
 ```
 
-> Try installing [Mosh][13] as a SSH replacement that can handle disconnections, entering/exiting sleep, changing networks and dealing with high latency links.
+> Try installing [Mosh](https://mosh.org/) as a SSH replacement that can handle disconnections, entering/exiting sleep, changing networks and dealing with high latency links.
 
 For `ssh` to let us run commands in the remote server we need to prove that we are authorized to do so.
 We can do this via passwords or ssh keys.
@@ -520,12 +519,12 @@ Key-based authentication utilizes public-key cryptography to prove to the server
 Key based authentication is both more convenient and more secure, so you should prefer it.
 Note that the private key (often `~/.ssh/id_rsa` and more recently `~/.ssh/id_ed25519`) is effectively your password, so treat it like so and never share its contents.
 
-To generate a pair you can run [`ssh-keygen`][14].
+To generate a pair you can run [`ssh-keygen`](https://www.man7.org/linux/man-pages/man1/ssh-keygen.1.html).
 ```bash
 ssh-keygen -a 100 -t ed25519 -f ~/.ssh/id_ed25519
 ```
 
-If you have ever configured pushing to GitHub using SSH keys, then you have probably done the steps outlined [here][15] and have a valid key pair already. To check if you have a passphrase and validate it you can run `ssh-keygen -y -f /path/to/key`.
+If you have ever configured pushing to GitHub using SSH keys, then you have probably done the steps outlined [here](https://help.github.com/articles/connecting-to-github-with-ssh/) and have a valid key pair already. To check if you have a passphrase and validate it you can run `ssh-keygen -y -f /path/to/key`.
 
 At the server side `ssh` will look into `.ssh/authorized_keys` to determine which clients it should let in. To copy a public key over you can use:
 
@@ -537,7 +536,7 @@ cat .ssh/id_ed25519.pub | ssh alice@remote 'cat >> ~/.ssh/authorized_keys'
 ssh-copy-id -i .ssh/id_ed25519 alice@remote
 ```
 
-Beyond running commands, the connection that ssh establishes can be used to transfer files from and to the server securely. [`scp`][16] is the most traditional tool and the syntax is `scp path/to/local_file remote_host:path/to/remote_file`. [`rsync`][17] improves upon `scp` by detecting identical files in local and remote, and preventing copying them again. It also provides more fine grained control over symlinks, permissions and has extra features like the `--partial` flag that can resume from a previously interrupted copy. `rsync` has a similar syntax to `scp`.
+Beyond running commands, the connection that ssh establishes can be used to transfer files from and to the server securely. [`scp`](https://www.man7.org/linux/man-pages/man1/scp.1.html) is the most traditional tool and the syntax is `scp path/to/local_file remote_host:path/to/remote_file`. [`rsync`](https://www.man7.org/linux/man-pages/man1/rsync.1.html) improves upon `scp` by detecting identical files in local and remote, and preventing copying them again. It also provides more fine grained control over symlinks, permissions and has extra features like the `--partial` flag that can resume from a previously interrupted copy. `rsync` has a similar syntax to `scp`.
 
 SSH client configuration is located at `~/.ssh/config` and it lets us declare hosts and set default settings for them. This configuration file is not just read by `ssh` but also other programs like `scp`, `rsync`, `mosh`, &c.
 
@@ -562,37 +561,37 @@ When using the command line interface you will often want to run more than one t
 For instance, you might want to run your editor and your program side by side.
 Although this can be achieved by opening new terminal windows, using a terminal multiplexer is a more versatile solution.
 
-Terminal multiplexers like [`tmux`][18] allow you to multiplex terminal windows using panes and tabs so you can interact with multiple shell sessions in an efficient manner.
+Terminal multiplexers like [`tmux`](https://www.man7.org/linux/man-pages/man1/tmux.1.html) allow you to multiplex terminal windows using panes and tabs so you can interact with multiple shell sessions in an efficient manner.
 Moreover, terminal multiplexers let you detach a current terminal session and reattach at some point later in time.
 Because of this, terminal multiplexers are really convenient when working with remote machines, as it avoids the need to use `nohup` and similar tricks.
 
-The most popular terminal multiplexer these days is [`tmux`][19]. `tmux` is highly configurable and by using the associated keybindings you can create multiple tabs and panes and quickly navigate through them.
+The most popular terminal multiplexer these days is [`tmux`](https://www.man7.org/linux/man-pages/man1/tmux.1.html). `tmux` is highly configurable and by using the associated keybindings you can create multiple tabs and panes and quickly navigate through them.
 
 `tmux` expects you to know its keybindings, and they all have the form `<C-b> x` where that means (1) press `Ctrl+b`, (2) release `Ctrl+b`, and then (3) press `x`. `tmux` has the following hierarchy of objects:
 - **Sessions** - a session is an independent workspace with one or more windows
-	+ `tmux` starts a new session.
-	+ `tmux new -s NAME` starts it with that name.
-	+ `tmux ls` lists the current sessions
-	+ Within `tmux` typing `<C-b> d`  detaches the current session
-	+ `tmux a` attaches the last session. You can use `-t` flag to specify which
+    + `tmux` starts a new session.
+    + `tmux new -s NAME` starts it with that name.
+    + `tmux ls` lists the current sessions
+    + Within `tmux` typing `<C-b> d`  detaches the current session
+    + `tmux a` attaches the last session. You can use `-t` flag to specify which
 
 - **Windows** - Equivalent to tabs in editors or browsers, they are visually separate parts of the same session
-	+ `<C-b> c` Creates a new window. To close it you can just terminate the shells doing `<C-d>`
-	+ `<C-b> N` Go to the _N_ th window. Note they are numbered
-	+ `<C-b> p` Goes to the previous window
-	+ `<C-b> n` Goes to the next window
-	+ `<C-b> ,` Rename the current window
-	+ `<C-b> w` List current windows
+    + `<C-b> c` Creates a new window. To close it you can just terminate the shells doing `<C-d>`
+    + `<C-b> N` Go to the _N_ th window. Note they are numbered
+    + `<C-b> p` Goes to the previous window
+    + `<C-b> n` Goes to the next window
+    + `<C-b> ,` Rename the current window
+    + `<C-b> w` List current windows
 
 - **Panes** - Like vim splits, panes let you have multiple shells in the same visual display.
-	+ `<C-b> "` Split the current pane horizontally
-	+ `<C-b> %` Split the current pane vertically
-	+ `<C-b> <direction>` Move to the pane in the specified _direction_. Direction here means arrow keys.
-	+ `<C-b> z` Toggle zoom for the current pane
-	+ `<C-b> [` Start scrollback. You can then press `<space>` to start a selection and `<enter>` to copy that selection.
-	+ `<C-b> <space>` Cycle through pane arrangements.
+    + `<C-b> "` Split the current pane horizontally
+    + `<C-b> %` Split the current pane vertically
+    + `<C-b> <direction>` Move to the pane in the specified _direction_. Direction here means arrow keys.
+    + `<C-b> z` Toggle zoom for the current pane
+    + `<C-b> [` Start scrollback. You can then press `<space>` to start a selection and `<enter>` to copy that selection.
+    + `<C-b> <space>` Cycle through pane arrangements.
 
-> To learn more about tmux, consider reading [this][20] quick tutorial and [this][21] more detailed explanation.
+> To learn more about tmux, consider reading [this](https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/) quick tutorial and [this](https://linuxcommand.org/lc3_adv_termmux.php) more detailed explanation.
 
 With tmux and SSH in your toolkit, you'll want to make your environment feel like home on any machine. That's where shell customization comes in.
 
@@ -606,7 +605,7 @@ hidden in the directory listing `ls` by default).
 
 Shells are one example of programs configured with such files. On startup, your shell will read many files to load its configuration.
 Depending on the shell and whether you are starting a login and/or interactive session, the entire process can be quite complex.
-[Here][22] is an excellent resource on the topic.
+[Here](https://blog.flowblok.id.au/2013-02/shell-startup-scripts.html) is an excellent resource on the topic.
 
 For `bash`, editing your `.bashrc` or `.bash_profile` will work in most systems.
 Some other examples of tools that can be configured through dotfiles are:
@@ -627,7 +626,7 @@ Here, we are telling the shell to set the value of the $PATH variable to its cur
 This will allow children processes to find programs located under `path/to/append`.
 
 
-Customizing your shell often means installing new command-line tools. Package managers make this easy. They handle downloading, installing, and updating software. Different operating systems have different package managers: macOS uses [Homebrew][23], Ubuntu/Debian use `apt`, Fedora uses `dnf`, and Arch uses `pacman`. We'll cover package managers in more depth in the shipping code lecture.
+Customizing your shell often means installing new command-line tools. Package managers make this easy. They handle downloading, installing, and updating software. Different operating systems have different package managers: macOS uses [Homebrew](https://brew.sh/), Ubuntu/Debian use `apt`, Fedora uses `dnf`, and Arch uses `pacman`. We'll cover package managers in more depth in the shipping code lecture.
 
 Here's how to install two useful tools using Homebrew on macOS:
 
@@ -649,9 +648,9 @@ With these installed, you can use `rg` instead of `grep` and `fd` instead of `fi
 > ```
 > Some installers use a slightly safer variant: `/bin/bash -c "$(curl -fsSL https://url)"` which at least ensures bash interprets the script rather than your current shell.
 
-When you try to run a command that isn't installed, your shell will show `command not found`. The website [command-not-found.com][24] is a helpful resource you can use to search for any command to find out how to install it across different package managers and distributions.
+When you try to run a command that isn't installed, your shell will show `command not found`. The website [command-not-found.com](https://command-not-found.com) is a helpful resource you can use to search for any command to find out how to install it across different package managers and distributions.
 
-Another useful tool is [`tldr`][25], which provides simplified, example-focused man pages. Instead of reading through lengthy documentation, you can quickly see common usage patterns:
+Another useful tool is [`tldr`](https://tldr.sh/), which provides simplified, example-focused man pages. Instead of reading through lengthy documentation, you can quickly see common usage patterns:
 
 ```console
 $ tldr fd
@@ -678,7 +677,7 @@ For instance, an alias in bash has the following structure:
 alias alias_name="command_to_alias arg1 arg2"
 ```
 
-> Note that there is no space around the equal sign `=`, because [`alias`][26] is a shell command that takes a single argument.
+> Note that there is no space around the equal sign `=`, because [`alias`](https://www.man7.org/linux/man-pages/man1/alias.1p.html) is a shell command that takes a single argument.
 
 Aliases have many convenient features:
 
@@ -731,30 +730,30 @@ long-lived projects.
 
 What should you put in your dotfiles?
 You can learn about your tool's settings by reading online documentation or
-[man pages][27]. Another great way is to
+[man pages](https://en.wikipedia.org/wiki/Man_page). Another great way is to
 search the internet for blog posts about specific programs, where authors will
 tell you about their preferred customizations. Yet another way to learn about
 customizations is to look through other people's dotfiles: you can find tons of
 [dotfiles
 repositories](https://github.com/search?o=desc&q=dotfiles&s=stars&type=Repositories)
 on GitHub --- see the most popular one
-[here][28] (we advise you not to blindly
+[here](https://github.com/mathiasbynens/dotfiles) (we advise you not to blindly
 copy configurations though).
-[Here][29] is another good resource on the topic.
+[Here](https://dotfiles.github.io/) is another good resource on the topic.
 
-All of the class instructors have their dotfiles publicly accessible on GitHub: [Anish][30],
-[Jon][31],
-[Jose][32].
+All of the class instructors have their dotfiles publicly accessible on GitHub: [Anish](https://github.com/anishathalye/dotfiles),
+[Jon](https://github.com/jonhoo/configs),
+[Jose](https://github.com/jjgo/dotfiles).
 
-**Frameworks and plugins** can improve your shell as well. Some popular general frameworks are [prezto][33] or [oh-my-zsh][34], and smaller plugins that focus on specific features:
+**Frameworks and plugins** can improve your shell as well. Some popular general frameworks are [prezto](https://github.com/sorin-ionescu/prezto) or [oh-my-zsh](https://ohmyz.sh/), and smaller plugins that focus on specific features:
 
-- [zsh-syntax-highlighting][35] - colors valid/invalid commands as you type
-- [zsh-autosuggestions][36] - suggests commands from history as you type
-- [zsh-completions][37] - additional completion definitions
-- [zsh-history-substring-search][38] - fish-like history search
-- [powerlevel10k][39] - fast, customizable prompt theme
+- [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) - colors valid/invalid commands as you type
+- [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) - suggests commands from history as you type
+- [zsh-completions](https://github.com/zsh-users/zsh-completions) - additional completion definitions
+- [zsh-history-substring-search](https://github.com/zsh-users/zsh-history-substring-search) - fish-like history search
+- [powerlevel10k](https://github.com/romkatv/powerlevel10k) - fast, customizable prompt theme
 
-Shells like [fish][40] include many of these features by default.
+Shells like [fish](https://fishshell.com/) include many of these features by default.
 
 > You don't need a massive framework like oh-my-zsh to get these features. Installing individual plugins is often faster and gives you more control. Large frameworks can significantly slow down shell startup time, so consider installing only what you actually use.
 
@@ -763,7 +762,7 @@ Shells like [fish][40] include many of these features by default.
 
 There are many ways to incorporate AI tooling in the shell. Here are a few examples at different levels of integration:
 
-**Command generation**: Tools like [`simonw/llm`][41] can help generate shell commands from natural language descriptions:
+**Command generation**: Tools like [`simonw/llm`](https://github.com/simonw/llm) can help generate shell commands from natural language descriptions:
 
 ```console
 $ llm cmd "find all python files modified in the last week"
@@ -792,7 +791,7 @@ sarah.connor
 
 Note how we use `"$INSTRUCTIONS"` (quoted) because the variable contains spaces, and `< users.txt` to redirect the file's content to stdin.
 
-**AI shells**: Tools like [Claude Code][42] act as a meta-shell that accepts English commands and translates them into shell operations, file edits, and more complex multi-step tasks.
+**AI shells**: Tools like [Claude Code](https://docs.anthropic.com/en/docs/claude-code) act as a meta-shell that accepts English commands and translates them into shell operations, file edits, and more complex multi-step tasks.
 
 # Terminal Emulators
 
@@ -807,7 +806,7 @@ Since you might be spending hundreds to thousands of hours in your terminal it p
 - Keyboard shortcuts
 - Tab/Pane support
 - Scrollback configuration
-- Performance (some newer terminals like [Alacritty][43] or [Ghostty][44] offer GPU acceleration).
+- Performance (some newer terminals like [Alacritty](https://github.com/alacritty/alacritty) or [Ghostty](https://ghostty.org/) offer GPU acceleration).
 
 
 
@@ -817,21 +816,21 @@ Since you might be spending hundreds to thousands of hours in your terminal it p
 
 1. You might see commands like `cmd --flag -- --notaflag`. The `--` is a special argument that tells the program to stop parsing flags. Everything after `--` is treated as a positional argument. Why might this be useful? Try running `touch -- -myfile` and then removing it without `--`.
 
-1. Read [`man ls`][45] and write an `ls` command that lists files in the following manner:
-	- Includes all files, including hidden files
-	- Sizes are listed in human readable format (e.g. 454M instead of 454279954)
-	- Files are ordered by recency
-	- Output is colorized
+1. Read [`man ls`](https://www.man7.org/linux/man-pages/man1/ls.1.html) and write an `ls` command that lists files in the following manner:
+    - Includes all files, including hidden files
+    - Sizes are listed in human readable format (e.g. 454M instead of 454279954)
+    - Files are ordered by recency
+    - Output is colorized
 
-	A sample output would look like this:
+    A sample output would look like this:
 
-	```
-	-rw-r--r--   1 user group 1.1M Jan 14 09:53 baz
-	drwxr-xr-x   5 user group  160 Jan 14 09:53 .
-	-rw-r--r--   1 user group  514 Jan 14 06:42 bar
-	-rw-r--r--   1 user group 106M Jan 13 12:12 foo
-	drwx------+ 47 user group 1.5K Jan 12 18:08 ..
-	```
+    ```
+    -rw-r--r--   1 user group 1.1M Jan 14 09:53 baz
+    drwxr-xr-x   5 user group  160 Jan 14 09:53 .
+    -rw-r--r--   1 user group  514 Jan 14 06:42 bar
+    -rw-r--r--   1 user group 106M Jan 13 12:12 foo
+    drwx------+ 47 user group 1.5K Jan 12 18:08 ..
+    ```
 
 {% comment %}
 ls -lath --color=auto
@@ -845,15 +844,11 @@ ls -lath --color=auto
 
 {% comment %}
 marco() {
-```
-export MARCO=$(pwd)
-```
+    export MARCO=$(pwd)
 }
 
 polo() {
-```
-cd "$MARCO"
-```
+    cd "$MARCO"
 }
 {% endcomment %}
 
@@ -861,28 +856,28 @@ cd "$MARCO"
 
 1. Say you have a command that fails rarely. In order to debug it you need to capture its output but it can be time consuming to get a failure run. Write a bash script that runs the following script until it fails and captures its standard output and error streams to files and prints everything at the end. Bonus points if you can also report how many runs it took for the script to fail.
 
-	```bash
-	#!/usr/bin/env bash
+    ```bash
+    #!/usr/bin/env bash
 
-	n=$(( RANDOM % 100 ))
+    n=$(( RANDOM % 100 ))
 
-	if [[ n -eq 42 ]]; then
-	   echo "Something went wrong"
-	   >&2 echo "The error was using magic numbers"
-	   exit 1
-	fi
+    if [[ n -eq 42 ]]; then
+       echo "Something went wrong"
+       >&2 echo "The error was using magic numbers"
+       exit 1
+    fi
 
-	echo "Everything went according to plan"
-	```
+    echo "Everything went according to plan"
+    ```
 
 {% comment %}
-# !/usr/bin/env bash
+#!/usr/bin/env bash
 
 count=0
 until [[ "$?" -ne 0 ]];
 do
   count=$((count+1))
-  ./random.sh &\> out.txt
+  ./random.sh &> out.txt
 done
 
 echo "found error after $count runs"
@@ -891,11 +886,11 @@ cat out.txt
 
 ## Signals and Job Control
 
-1. Start a `sleep 10000` job in a terminal, background it with `Ctrl-Z` and continue its execution with `bg`. Now use [`pgrep`][46] to find its pid and [`pkill`][47] to kill it without ever typing the pid itself. (Hint: use the `-af` flags).
+1. Start a `sleep 10000` job in a terminal, background it with `Ctrl-Z` and continue its execution with `bg`. Now use [`pgrep`](https://www.man7.org/linux/man-pages/man1/pgrep.1.html) to find its pid and [`pkill`](https://man7.org/linux/man-pages/man1/pgrep.1.html) to kill it without ever typing the pid itself. (Hint: use the `-af` flags).
 
-1. Say you don't want to start a process until another completes. How would you go about it? In this exercise, our limiting process will always be `sleep 60 &`. One way to achieve this is to use the [`wait`][48] command. Try launching the sleep command and having an `ls` wait until the background process finishes.
+1. Say you don't want to start a process until another completes. How would you go about it? In this exercise, our limiting process will always be `sleep 60 &`. One way to achieve this is to use the [`wait`](https://www.man7.org/linux/man-pages/man1/wait.1p.html) command. Try launching the sleep command and having an `ls` wait until the background process finishes.
 
-	However, this strategy will fail if we start in a different bash session, since `wait` only works for child processes. One feature we did not discuss in the notes is that the `kill` command's exit status will be zero on success and nonzero otherwise. `kill -0` does not send a signal but will give a nonzero exit status if the process does not exist. Write a bash function called `pidwait` that takes a pid and waits until the given process completes. You should use `sleep` to avoid wasting CPU unnecessarily.
+    However, this strategy will fail if we start in a different bash session, since `wait` only works for child processes. One feature we did not discuss in the notes is that the `kill` command's exit status will be zero on success and nonzero otherwise. `kill -0` does not send a signal but will give a nonzero exit status if the process does not exist. Write a bash function called `pidwait` that takes a pid and waits until the given process completes. You should use `sleep` to avoid wasting CPU unnecessarily.
 
 ## Files and Permissions
 
@@ -903,7 +898,7 @@ cat out.txt
 
 ## Terminal Multiplexers
 
-1. Follow this `tmux` [tutorial][49] and then learn how to do some basic customizations following [these steps][50].
+1. Follow this `tmux` [tutorial](https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/) and then learn how to do some basic customizations following [these steps](https://www.hamvocke.com/blog/a-guide-to-customizing-your-tmux-conf/).
 
 ## Aliases and Dotfiles
 
@@ -915,7 +910,7 @@ cat out.txt
 
 1. Add a configuration for at least one program, e.g. your shell, with some customization (to start off, it can be something as simple as customizing your shell prompt by setting `$PS1`).
 
-1. Set up a method to install your dotfiles quickly (and without manual effort) on a new machine. This can be as simple as a shell script that calls `ln -s` for each file, or you could use a [specialized utility][51].
+1. Set up a method to install your dotfiles quickly (and without manual effort) on a new machine. This can be as simple as a shell script that calls `ln -s` for each file, or you could use a [specialized utility](https://dotfiles.github.io/utilities/).
 
 1. Test your installation script on a fresh virtual machine.
 
@@ -925,19 +920,19 @@ cat out.txt
 
 ## Remote Machines (SSH)
 
-Install a Linux virtual machine (or use an already existing one) for these exercises. If you are not familiar with virtual machines check out [this][52] tutorial for installing one.
+Install a Linux virtual machine (or use an already existing one) for these exercises. If you are not familiar with virtual machines check out [this](https://hibbard.eu/install-ubuntu-virtual-box/) tutorial for installing one.
 
-1. Go to `~/.ssh/` and check if you have a pair of SSH keys there. If not, generate them with `ssh-keygen -a 100 -t ed25519`. It is recommended that you use a password and use `ssh-agent`, more info [here][53].
+1. Go to `~/.ssh/` and check if you have a pair of SSH keys there. If not, generate them with `ssh-keygen -a 100 -t ed25519`. It is recommended that you use a password and use `ssh-agent`, more info [here](https://www.ssh.com/ssh/agent).
 
 1. Edit `.ssh/config` to have an entry as follows:
 
-	```bash
-	Host vm
-	    User username_goes_here
-	    HostName ip_goes_here
-	    IdentityFile ~/.ssh/id_ed25519
-	    LocalForward 9999 localhost:8888
-	```
+    ```bash
+    Host vm
+        User username_goes_here
+        HostName ip_goes_here
+        IdentityFile ~/.ssh/id_ed25519
+        LocalForward 9999 localhost:8888
+    ```
 
 1. Use `ssh-copy-id vm` to copy your ssh key to the server.
 
@@ -945,61 +940,6 @@ Install a Linux virtual machine (or use an already existing one) for these exerc
 
 1. Edit your SSH server config by doing `sudo vim /etc/ssh/sshd_config` and disable password authentication by editing the value of `PasswordAuthentication`. Disable root login by editing the value of `PermitRootLogin`. Restart the `ssh` service with `sudo service sshd restart`. Try sshing in again.
 
-1. (Challenge) Install [`mosh`][54] in the VM and establish a connection. Then disconnect the network adapter of the server/VM. Can mosh properly recover from it?
+1. (Challenge) Install [`mosh`](https://mosh.org/) in the VM and establish a connection. Then disconnect the network adapter of the server/VM. Can mosh properly recover from it?
 
 1. (Challenge) Look into what the `-N` and `-f` flags do in `ssh` and figure out a command to achieve background port forwarding.
-
-[1]:	https://github.com/junegunn/fzf
-[2]:	https://en.wikipedia.org/wiki/Short-circuit_evaluation
-[3]:	https://www.man7.org/linux/man-pages/man1/kill.1.html
-[4]:	https://www.man7.org/linux/man-pages/man1/fg.1p.html
-[5]:	https://man7.org/linux/man-pages/man1/bg.1p.html
-[6]:	https://www.man7.org/linux/man-pages/man1/jobs.1p.html
-[7]:	https://www.man7.org/linux/man-pages/man1/pgrep.1.html
-[8]:	https://www.man7.org/linux/man-pages/man1/nohup.1.html
-[9]:	https://en.wikipedia.org/wiki/Signal_(IPC)
-[10]:	https://www.man7.org/linux/man-pages/man7/signal.7.html
-[11]:	https://command-not-found.com
-[12]:	https://en.wikipedia.org/wiki/File-system_permissions#Traditional_Unix_permissions
-[13]:	https://mosh.org/
-[14]:	https://www.man7.org/linux/man-pages/man1/ssh-keygen.1.html
-[15]:	https://help.github.com/articles/connecting-to-github-with-ssh/
-[16]:	https://www.man7.org/linux/man-pages/man1/scp.1.html
-[17]:	https://www.man7.org/linux/man-pages/man1/rsync.1.html
-[18]:	https://www.man7.org/linux/man-pages/man1/tmux.1.html
-[19]:	https://www.man7.org/linux/man-pages/man1/tmux.1.html
-[20]:	https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/
-[21]:	https://linuxcommand.org/lc3_adv_termmux.php
-[22]:	https://blog.flowblok.id.au/2013-02/shell-startup-scripts.html
-[23]:	https://brew.sh/
-[24]:	https://command-not-found.com
-[25]:	https://tldr.sh/
-[26]:	https://www.man7.org/linux/man-pages/man1/alias.1p.html
-[27]:	https://en.wikipedia.org/wiki/Man_page
-[28]:	https://github.com/mathiasbynens/dotfiles
-[29]:	https://dotfiles.github.io/
-[30]:	https://github.com/anishathalye/dotfiles
-[31]:	https://github.com/jonhoo/configs
-[32]:	https://github.com/jjgo/dotfiles
-[33]:	https://github.com/sorin-ionescu/prezto
-[34]:	https://ohmyz.sh/
-[35]:	https://github.com/zsh-users/zsh-syntax-highlighting
-[36]:	https://github.com/zsh-users/zsh-autosuggestions
-[37]:	https://github.com/zsh-users/zsh-completions
-[38]:	https://github.com/zsh-users/zsh-history-substring-search
-[39]:	https://github.com/romkatv/powerlevel10k
-[40]:	https://fishshell.com/
-[41]:	https://github.com/simonw/llm
-[42]:	https://docs.anthropic.com/en/docs/claude-code
-[43]:	https://github.com/alacritty/alacritty
-[44]:	https://ghostty.org/
-[45]:	https://www.man7.org/linux/man-pages/man1/ls.1.html
-[46]:	https://www.man7.org/linux/man-pages/man1/pgrep.1.html
-[47]:	https://man7.org/linux/man-pages/man1/pgrep.1.html
-[48]:	https://www.man7.org/linux/man-pages/man1/wait.1p.html
-[49]:	https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/
-[50]:	https://www.hamvocke.com/blog/a-guide-to-customizing-your-tmux-conf/
-[51]:	https://dotfiles.github.io/utilities/
-[52]:	https://hibbard.eu/install-ubuntu-virtual-box/
-[53]:	https://www.ssh.com/ssh/agent
-[54]:	https://mosh.org/
