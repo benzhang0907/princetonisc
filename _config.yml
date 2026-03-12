@@ -1,6 +1,7 @@
 # Setup
 title: 'ISC lecture notes'
 thumbnail: "/static/assets/thumbnails/default.png"
+repository: "benzhang0907/princetonisc"
 
 # Settings
 markdown: kramdown
