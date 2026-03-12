@@ -150,3 +150,11 @@ we can add it to the list!
 {% endcomment %}
 
 We thank Elaine Mello and [MIT Open Learning](https://openlearning.mit.edu/) for making it possible for us to record lecture videos. We thank Luis Turino / [SIPB](https://sipb.mit.edu/) for supporting this class as part of [SIPB IAP 2026](https://sipb.mit.edu/iap/).
+
+---
+
+<div class="small center">
+<p><a href="https://github.com/missing-semester/missing-semester">Source code</a>.</p>
+<p>Licensed under CC BY-NC-SA.</p>
+<p>See <a href="/license/">here</a> for contribution &amp; translation guidelines.</p>
+</div>

@@ -1,7 +1,7 @@
 # Setup
-title: 'ISC lecture notes'
+title: 'Missing Semester'
+url: https://missing.csail.mit.edu
 thumbnail: "/static/assets/thumbnails/default.png"
-repository: "benzhang0907/princetonisc"
 
 # Settings
 markdown: kramdown
@@ -10,11 +10,17 @@ kramdown:
   hard_wrap: false
 highlighter: rouge
 permalink: /:title/
-
+future: true
+# safe: true # breaks local rendering if enabled
 timezone: America/New_York
-
+analytics:
+  tracking_id: G-P7WVHD84D1
 
 collections:
+  '2019':
+    output: true
+  '2020':
+    output: true
   '2026':
     output: true
 
