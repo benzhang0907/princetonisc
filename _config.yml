@@ -1,3 +1,30 @@
-title: ISC
-description: ISC lecture notes
-theme: jekyll-theme-cayman
+# Setup
+title: 'ISC lecture notes'
+thumbnail: "/static/assets/thumbnails/default.png"
+
+# Settings
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+highlighter: rouge
+permalink: /:title/
+
+timezone: America/New_York
+
+
+collections:
+  '2026':
+    output: true
+
+# Excludes
+exclude:
+  - AGENTS.md
+  - CNAME
+  - Dockerfile
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - browser.sh
+  - docker-compose.yml
+  - vendor
